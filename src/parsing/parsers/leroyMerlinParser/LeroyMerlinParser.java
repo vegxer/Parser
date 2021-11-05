@@ -1,10 +1,9 @@
-package parsing.leroyMerlinParser;
+package parsing.parsers.leroyMerlinParser;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import parsing.Parser;
 import parsing.model.Review;
-import parsing.model.Reviews;
 import time.Date;
 
 public class LeroyMerlinParser implements Parser<Review> {

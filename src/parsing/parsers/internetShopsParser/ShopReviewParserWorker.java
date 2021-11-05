@@ -1,4 +1,4 @@
-package parsing.internetShopsParser;
+package parsing.parsers.internetShopsParser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -9,6 +9,7 @@ import parsing.ParserSettings;
 import parsing.ParserWorker;
 import parsing.handlers.ParserHandler;
 import parsing.model.Review;
+import parsing.model.Text;
 
 import java.io.IOException;
 
@@ -19,13 +20,12 @@ public class ShopReviewParserWorker extends ParserWorker<Review> {
 
     @Override
     protected NestingLevel getFirstLvl() {
-        return new ShopPageLevel(parserSettings.getStartPoint(), parserSettings.getEndPoint(),
-                new Elements(Jsoup.parse("internet-magaziny")));
+        return new ShopPageLevel(parserSettings.getStartPoint(), parserSettings.getEndPoint());
     }
 
     private class ShopPageLevel extends NestingLevel {
-        public ShopPageLevel(int startPoint, int endPoint, Elements elements) {
-            super(startPoint, endPoint, elements);
+        public ShopPageLevel(int startPoint, int endPoint) {
+            super(startPoint, endPoint);
         }
 
         @Override
@@ -37,7 +37,7 @@ public class ShopReviewParserWorker extends ParserWorker<Review> {
 
         @Override
         public Element getElementById(int id) throws IOException {
-            ParserSettings.PREFIX = getElement(0).text() + "?page=" + id;
+            ParserSettings.PREFIX = "internet-magaziny?page=" + id;
             return loader.getSourceByPageId(ParserSettings.PREFIX);
         }
     }
@@ -111,16 +111,16 @@ public class ShopReviewParserWorker extends ParserWorker<Review> {
     public static class NewData implements ParserHandler<ParserWorker<Review>, Review> {
         @Override
         public void onAction(ParserWorker<Review> sender, Review data) {
+            System.out.println("\n");
             System.out.println("Магазин: " + data.getShopName());
             System.out.println("Номер страницы отзывов: " +
                     ParserSettings.PREFIX.substring(ParserSettings.PREFIX.lastIndexOf('=') + 1));
             System.out.println("Дата: " + data.getDate().toString().substring(0, 10));
             System.out.println("Автор: " + data.getReviewerName());
             System.out.println("Оценка: " + data.getGrade() + "/5");
-            System.out.println("Плюсы: " + data.getPros());
-            System.out.println("Минусы: " + data.getCons());
-            System.out.println("Отзыв: " + data.getReview());
-            System.out.println();
+            System.out.println("Плюсы: " + Text.splitByLines(data.getPros(), 100));
+            System.out.println("Минусы: " + Text.splitByLines(data.getCons(), 100));
+            System.out.println("Отзыв: " + Text.splitByLines(data.getReview(), 100));
         }
     }
 }

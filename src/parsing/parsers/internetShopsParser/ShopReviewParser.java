@@ -1,4 +1,4 @@
-package parsing.internetShopsParser;
+package parsing.parsers.internetShopsParser;
 
 import org.jsoup.nodes.Element;
 import parsing.Parser;

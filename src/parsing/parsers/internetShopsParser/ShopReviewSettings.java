@@ -1,25 +1,23 @@
-package parsing.leroyMerlinParser;
+package parsing.parsers.internetShopsParser;
 
 import parsing.ParserSettings;
 
-public class LeroyMerlinSettings extends ParserSettings {
-    String searchQuery;
-    private int productStart, productEnd;
+public class ShopReviewSettings extends ParserSettings {
+    private int shopStart, shopEnd;
     private int reviewsPagesStart, reviewsPagesEnd;
     private int reviewStart, reviewEnd;
 
-    public LeroyMerlinSettings(int start, int end, int shopStart, int shopEnd, int reviewsPagesStart,
-                               int reviewsPagesEnd, int reviewStart, int reviewEnd, String searchQuery) {
+    public ShopReviewSettings(int start, int end, int shopStart, int shopEnd,
+                              int reviewsPagesStart, int reviewsPagesEnd, int reviewStart, int reviewEnd) {
         super(start, end);
+        BASE_URL = "https://nanegative.ru";
+        PREFIX = "/{CurrentId}";
         setReviewsPagesEnd(reviewsPagesEnd);
         setReviewsPagesStart(reviewsPagesStart);
-        setProductStart(shopStart);
-        setProductEnd(shopEnd);
+        setShopStart(shopStart);
+        setShopEnd(shopEnd);
         setReviewStart(reviewStart);
         setReviewEnd(reviewEnd);
-        setSearchQuery(searchQuery);
-        BASE_URL = "https://leroymerlin.ru";
-        PREFIX = "/{CurrentId}";
     }
 
     public int getReviewsPagesStart() {
@@ -42,24 +40,24 @@ public class LeroyMerlinSettings extends ParserSettings {
         this.reviewsPagesEnd = reviewsPagesEnd;
     }
 
-    public int getProductStart() {
-        return productStart;
+    public int getShopStart() {
+        return shopStart;
     }
 
-    public void setProductStart(int productStart) {
-        if (productStart < 1)
+    public void setShopStart(int shopStart) {
+        if (shopStart < 1)
             throw new IllegalArgumentException("Неверно указан номер страницы");
-        this.productStart = productStart;
+        this.shopStart = shopStart;
     }
 
-    public int getProductEnd() {
-        return productEnd;
+    public int getShopEnd() {
+        return shopEnd;
     }
 
-    public void setProductEnd(int productEnd) {
-        if (productEnd < productStart)
+    public void setShopEnd(int shopEnd) {
+        if (shopEnd < shopStart)
             throw new IllegalArgumentException("Неверно указан номер страницы");
-        this.productEnd = productEnd;
+        this.shopEnd = shopEnd;
     }
 
     public int getReviewStart() {
@@ -80,15 +78,5 @@ public class LeroyMerlinSettings extends ParserSettings {
         if (reviewEnd < reviewStart)
             throw new IllegalArgumentException("Неверно указан номер страницы");
         this.reviewEnd = reviewEnd;
-    }
-
-    public String getSearchQuery() {
-        return searchQuery;
-    }
-
-    public void setSearchQuery(String searchQuery) {
-        if (searchQuery == null)
-            throw new NullPointerException();
-        this.searchQuery = searchQuery;
     }
 }

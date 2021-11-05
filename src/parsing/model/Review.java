@@ -45,7 +45,7 @@ public class Review {
     public void setReview(String review) {
         if (review == null)
             throw new NullPointerException();
-        this.review = splitText(review);
+        this.review = review;
     }
 
     public String getPros() {
@@ -55,7 +55,7 @@ public class Review {
     public void setPros(String pros) {
         if (pros == null)
             throw new NullPointerException();
-        this.pros = splitText(pros);
+        this.pros = pros;
     }
 
     public String getCons() {
@@ -65,20 +65,7 @@ public class Review {
     public void setCons(String cons) {
         if (cons == null)
             throw new NullPointerException();
-        this.cons = splitText(cons);
-    }
-
-    public String splitText(String text) {
-        StringBuilder str = new StringBuilder(text);
-
-        for (int i = 100; i < str.length(); i += 100) {
-            if (str.indexOf(" ", i) > 0)
-                str.setCharAt(str.indexOf(" ", i), '\n');
-            else
-                str.insert(i, "-\n");
-        }
-
-        return str.toString();
+        this.cons = cons;
     }
 
     public String getShopName() {

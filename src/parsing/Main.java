@@ -3,15 +3,18 @@ package parsing;
 import commandHandler.Command;
 import commandHandler.Commander;
 import org.json.simple.parser.ParseException;
-import parsing.imagesSearcher.ImagesParser;
-import parsing.imagesSearcher.ImagesParserSettings;
-import parsing.imagesSearcher.ImagesParserWorker;
-import parsing.internetShopsParser.ShopReviewParser;
-import parsing.internetShopsParser.ShopReviewParserWorker;
-import parsing.internetShopsParser.ShopReviewSettings;
-import parsing.leroyMerlinParser.LeroyMerlinParser;
-import parsing.leroyMerlinParser.LeroyMerlinParserWorker;
-import parsing.leroyMerlinParser.LeroyMerlinSettings;
+import parsing.parsers.imagesSearcher.ImagesParser;
+import parsing.parsers.imagesSearcher.ImagesParserSettings;
+import parsing.parsers.imagesSearcher.ImagesParserWorker;
+import parsing.parsers.internetShopsParser.ShopReviewParser;
+import parsing.parsers.internetShopsParser.ShopReviewParserWorker;
+import parsing.parsers.internetShopsParser.ShopReviewSettings;
+import parsing.parsers.leroyMerlinParser.LeroyMerlinParser;
+import parsing.parsers.leroyMerlinParser.LeroyMerlinParserWorker;
+import parsing.parsers.leroyMerlinParser.LeroyMerlinSettings;
+import parsing.parsers.newslerParser.NewslerParser;
+import parsing.parsers.newslerParser.NewslerParserWorker;
+import parsing.parsers.newslerParser.NewslerSettings;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +63,14 @@ public class Main {
         parse(parser);
     }
 
+    public static void parseNewsler(int start, int end, int startNews, int endNews, String savePath) throws IOException, ParseException {
+        NewslerParserWorker parser = new NewslerParserWorker(new NewslerParser(),
+                new NewslerSettings(start, end, startNews, endNews), savePath);
+        parser.onCompleted.addOnActionHandler(new NewslerParserWorker.Completed());
+        parser.onNewData.addOnActionHandler(new NewslerParserWorker.NewData());
+        parse(parser);
+    }
+
     public static <T>void parse(ParserWorker<T> parser) throws IOException, ParseException {
         parser.start();
         parser.abort();
@@ -101,6 +112,13 @@ public class Main {
                 commandArgs -> parseLeroy(commandArgs.get(0), Integer.parseInt(commandArgs.get(1)), Integer.parseInt(commandArgs.get(2)),
                         Integer.parseInt(commandArgs.get(3)), Integer.parseInt(commandArgs.get(4)), Integer.parseInt(commandArgs.get(5)),
                         Integer.parseInt(commandArgs.get(6)), Integer.parseInt(commandArgs.get(7)), Integer.parseInt(commandArgs.get(8)))));
+
+        commander.addCommand(new Command("pn",
+                "parse newsler.ru",
+                new ArrayList<>(Arrays.asList("<No. start page>", "<No. end page>",
+                        "<No. start news>", "<No. end news>", "<Images save path>")),
+                commandArgs -> parseNewsler(Integer.parseInt(commandArgs.get(0)), Integer.parseInt(commandArgs.get(1)),
+                        Integer.parseInt(commandArgs.get(2)), Integer.parseInt(commandArgs.get(3)), commandArgs.get(4))));
 
         Scanner scanner = new Scanner(System.in);
         while (true) {

@@ -84,6 +84,17 @@ public class Date {
         this.date = date;
     }
 
+    public void decrementDate() {
+        if (date > 1)
+            --date;
+        else {
+            month = (month + 11) % 12;
+            date = getDaysInMonth(month, year);
+            if (date == 31 && month == 11)
+                --year;
+        }
+    }
+
     public int getHours() {
         return hours;
     }

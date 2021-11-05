@@ -1,4 +1,4 @@
-package parsing.leroyMerlinParser;
+package parsing.parsers.leroyMerlinParser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -9,7 +9,7 @@ import parsing.ParserSettings;
 import parsing.ParserWorker;
 import parsing.handlers.ParserHandler;
 import parsing.model.Review;
-import parsing.model.Reviews;
+import parsing.model.Text;
 
 import java.io.IOException;
 
@@ -114,16 +114,16 @@ public class LeroyMerlinParserWorker extends ParserWorker<Review> {
     public static class NewData implements ParserHandler<ParserWorker<Review>, Review> {
         @Override
         public void onAction(ParserWorker<Review> sender, Review data) {
+            System.out.println("\n");
             System.out.println("Название товара: " + data.getShopName());
             System.out.println("Номер страницы отзывов: " +
                     ParserSettings.PREFIX.substring(ParserSettings.PREFIX.lastIndexOf('=') + 1));
             System.out.println("Дата: " + data.getDate().toString().substring(0, 10));
             System.out.println("Автор: " + data.getReviewerName());
             System.out.println("Оценка: " + data.getGrade() + "/5");
-            System.out.println(data.getPros());
-            System.out.println(data.getCons());
-            System.out.println("Отзыв: " + data.getReview());
-            System.out.println();
+            System.out.println(Text.splitByLines(data.getPros(), 100));
+            System.out.println(Text.splitByLines(data.getCons(), 100));
+            System.out.println("Отзыв: " + Text.splitByLines(data.getReview(), 100));
         }
     }
 }

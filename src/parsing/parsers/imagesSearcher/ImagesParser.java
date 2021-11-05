@@ -1,4 +1,4 @@
-package parsing.imagesSearcher;
+package parsing.parsers.imagesSearcher;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

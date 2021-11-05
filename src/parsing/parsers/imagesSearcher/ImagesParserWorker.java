@@ -1,4 +1,4 @@
-package parsing.imagesSearcher;
+package parsing.parsers.imagesSearcher;
 
 import Threads.LoadingThread;
 import org.jsoup.nodes.Element;
