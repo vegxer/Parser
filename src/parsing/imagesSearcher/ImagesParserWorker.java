@@ -62,7 +62,7 @@ public class ImagesParserWorker extends ParserWorker<ArrayList<Image>> {
         @Override
         public Element getElementById(int id) {
             if (id > 30)
-                throw new IllegalArgumentException("Максимальное количество изображений на странице - 30");
+                return null;
             return getElement(0).getElementsByClass(String.format("serp-item serp-item_type_search serp-item" +
                             "_group_search serp-item_pos_%d serp-item_scale_yes justifier__item i-bem",
                     Integer.parseInt(ParserSettings.PREFIX) * 30 + id - 1)).get(0);

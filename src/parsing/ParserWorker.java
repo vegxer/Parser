@@ -1,6 +1,7 @@
 package parsing;
 
 import org.json.simple.parser.ParseException;
+import org.jsoup.nodes.Element;
 import parsing.handlers.HandlerController;
 
 import java.io.IOException;
@@ -49,14 +50,20 @@ public abstract class ParserWorker<T> {
                     onCompleted.onAction("Загрузка закончена");
                     return;
                 }
-                work(nestLvl.getNextLvl(nestLvl.getElementById(i)));
+                Element currElement = nestLvl.getElementById(i);
+                if (currElement == null)
+                    return;
+                work(nestLvl.getNextLvl(currElement));
             }
         }
     }
 
     private void parseLastLvl(NestingLevel lastLvl) throws IOException, ParseException {
         for (int i = lastLvl.getStartPoint(); i <= lastLvl.getEndPoint(); ++i) {
-            T result = parser.parse(lastLvl.getElementById(i));
+            Element currElement = lastLvl.getElementById(i);
+            if (currElement == null)
+                return;
+            T result = parser.parse(currElement);
             onNewData.onAction(result);
         }
     }

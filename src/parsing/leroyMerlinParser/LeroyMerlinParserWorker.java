@@ -1,4 +1,4 @@
-package parsing.internetShopsParser;
+package parsing.leroyMerlinParser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -9,49 +9,51 @@ import parsing.ParserSettings;
 import parsing.ParserWorker;
 import parsing.handlers.ParserHandler;
 import parsing.model.Review;
+import parsing.model.Reviews;
 
 import java.io.IOException;
 
-public class ShopReviewParserWorker extends ParserWorker<Review> {
-    public ShopReviewParserWorker(Parser<Review> parser, ShopReviewSettings parserSettings) {
+public class LeroyMerlinParserWorker extends ParserWorker<Review> {
+    public LeroyMerlinParserWorker(Parser<Review> parser, LeroyMerlinSettings parserSettings) {
         super(parser, parserSettings);
     }
 
-    @Override
+
     protected NestingLevel getFirstLvl() {
-        return new ShopPageLevel(parserSettings.getStartPoint(), parserSettings.getEndPoint(),
-                new Elements(Jsoup.parse("internet-magaziny")));
+        return new ProductPageLevel(parserSettings.getStartPoint(), parserSettings.getEndPoint(),
+                new Elements(Jsoup.parse("search/?q=" + ((LeroyMerlinSettings)parserSettings).getSearchQuery() + "&page=")));
     }
 
-    private class ShopPageLevel extends NestingLevel {
-        public ShopPageLevel(int startPoint, int endPoint, Elements elements) {
+    private class ProductPageLevel extends NestingLevel {
+        public ProductPageLevel(int startPoint, int endPoint, Elements elements) {
             super(startPoint, endPoint, elements);
         }
 
         @Override
         public NestingLevel getNextLvl(Element currElement) {
-            ShopReviewSettings settings = (ShopReviewSettings) parserSettings;
-            return new ShopLevel(settings.getShopStart(), settings.getShopEnd(),
-                    currElement.getElementsByClass("ss"));
+            LeroyMerlinSettings settings = (LeroyMerlinSettings) parserSettings;
+            return new ProductLevel(settings.getProductStart(), settings.getProductEnd(),
+                    currElement.getElementsByClass("bex6mjh_plp b1f5t594_plp p5y548z_plp pblwt5z_plp nf842w" +
+                            "f_plp"));
         }
 
         @Override
         public Element getElementById(int id) throws IOException {
-            ParserSettings.PREFIX = getElement(0).text() + "?page=" + id;
+            ParserSettings.PREFIX = getElement(0).text() + id;
             return loader.getSourceByPageId(ParserSettings.PREFIX);
         }
     }
 
-    private class ShopLevel extends NestingLevel {
-        public ShopLevel(int startPoint, int endPoint, Elements elements) {
+    private class ProductLevel extends NestingLevel {
+        public ProductLevel(int startPoint, int endPoint, Elements elements) {
             super(startPoint, endPoint, elements);
         }
 
         @Override
         public NestingLevel getNextLvl(Element currElement) {
-            ShopReviewSettings settings = (ShopReviewSettings) parserSettings;
+            LeroyMerlinSettings settings = (LeroyMerlinSettings) parserSettings;
             return new ReviewPageLevel(settings.getReviewsPagesStart(), settings.getReviewsPagesEnd(),
-                    new Elements(Jsoup.parse(currElement.attributes().get("href").substring(1))));
+                    new Elements(Jsoup.parse(currElement.attributes().get("href").substring(1) + "?page=")));
         }
 
         @Override
@@ -69,14 +71,15 @@ public class ShopReviewParserWorker extends ParserWorker<Review> {
 
         @Override
         public NestingLevel getNextLvl(Element currElement) {
-            ShopReviewSettings settings = (ShopReviewSettings) parserSettings;
-            return new ReviewLevel(settings.getReviewStart(), settings.getReviewEnd(),
-                    currElement.getElementsByClass("reviewers-box"));
+            LeroyMerlinSettings settings = (LeroyMerlinSettings)parserSettings;
+            Elements reviews = currElement.getElementsByTag("uc-prp-review-card");
+            reviews.add(0, Jsoup.parse(currElement.getElementsByAttributeValue("slot", "title").get(0).text()));
+            return new ReviewLevel(settings.getReviewStart(), settings.getReviewEnd(), reviews);
         }
 
         @Override
         public Element getElementById(int id) throws IOException {
-            ParserSettings.PREFIX = getElement(0).text() + "?page=" + id;
+            ParserSettings.PREFIX = getElement(0).text() + id;
             return loader.getSourceByPageId(ParserSettings.PREFIX);
         }
     }
@@ -94,9 +97,9 @@ public class ShopReviewParserWorker extends ParserWorker<Review> {
 
         @Override
         public Element getElementById(int id) {
-            if (id > 30 || id > getElements().size())
+            if (id > 5 || id > getElements().size() - 1)
                 return null;
-            return getElement(id - 1);
+            return getElement(id).appendText(getElement(0).text());
         }
     }
 
@@ -111,14 +114,14 @@ public class ShopReviewParserWorker extends ParserWorker<Review> {
     public static class NewData implements ParserHandler<ParserWorker<Review>, Review> {
         @Override
         public void onAction(ParserWorker<Review> sender, Review data) {
-            System.out.println("Магазин: " + data.getShopName());
+            System.out.println("Название товара: " + data.getShopName());
             System.out.println("Номер страницы отзывов: " +
                     ParserSettings.PREFIX.substring(ParserSettings.PREFIX.lastIndexOf('=') + 1));
             System.out.println("Дата: " + data.getDate().toString().substring(0, 10));
             System.out.println("Автор: " + data.getReviewerName());
             System.out.println("Оценка: " + data.getGrade() + "/5");
-            System.out.println("Плюсы: " + data.getPros());
-            System.out.println("Минусы: " + data.getCons());
+            System.out.println(data.getPros());
+            System.out.println(data.getCons());
             System.out.println("Отзыв: " + data.getReview());
             System.out.println();
         }

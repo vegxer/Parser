@@ -1,10 +1,15 @@
 package parsing.model;
 
+import time.Date;
+
 public class Review {
     private int grade;
-    private String reviewerName, review, pros, cons;
+    private String reviewerName, review, pros, cons, shopName;
+    private Date date;
 
-    public Review(int grade, String reviewerName, String review, String pros, String cons) {
+    public Review(String shopName, Date date, int grade, String reviewerName, String review, String pros, String cons) {
+        setDate(date);
+        setShopName(shopName);
         setGrade(grade);
         setReviewerName(reviewerName);
         setReview(review);
@@ -74,5 +79,25 @@ public class Review {
         }
 
         return str.toString();
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        if (shopName == null)
+            throw new NullPointerException();
+        this.shopName = shopName;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        if (date == null)
+            throw new NullPointerException();
+        this.date = date;
     }
 }
