@@ -1,6 +1,6 @@
-package parsing.parsers.imagesSearcher;
+package parsing.parsers.yandexImagesParser;
 
-import Files.Extension;
+import files.Extension;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

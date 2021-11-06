@@ -1,6 +1,6 @@
-package parsing.parsers.imagesSearcher;
+package parsing.parsers.yandexImagesParser;
 
-import Threads.LoadingThread;
+import threads.LoadingThread;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import parsing.NestingLevel;

@@ -1,6 +1,6 @@
 package parsing.model;
 
-import Files.Extension;
+import files.Extension;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;

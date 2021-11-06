@@ -1,4 +1,4 @@
-package Files;
+package files;
 
 import java.util.ArrayList;
 import java.util.List;
