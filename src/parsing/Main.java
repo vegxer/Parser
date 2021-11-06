@@ -15,6 +15,9 @@ import parsing.parsers.leroyMerlinParser.LeroyMerlinSettings;
 import parsing.parsers.newslerParser.NewslerParser;
 import parsing.parsers.newslerParser.NewslerParserWorker;
 import parsing.parsers.newslerParser.NewslerSettings;
+import parsing.parsers.theGuardianParser.GuardianParser;
+import parsing.parsers.theGuardianParser.GuardianParserWorker;
+import parsing.parsers.theGuardianParser.GuardianSettings;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,6 +74,14 @@ public class Main {
         parse(parser);
     }
 
+    public static void parseGuardian(int start, int end, int startNews, int endNews, String savePath) throws IOException, ParseException {
+        GuardianParserWorker parser = new GuardianParserWorker(new GuardianParser(),
+                new GuardianSettings(start, end, startNews, endNews), savePath);
+        parser.onCompleted.addOnActionHandler(new GuardianParserWorker.Completed());
+        parser.onNewData.addOnActionHandler(new GuardianParserWorker.NewData());
+        parse(parser);
+    }
+
     public static <T>void parse(ParserWorker<T> parser) throws IOException, ParseException {
         parser.start();
         parser.abort();
@@ -120,13 +131,20 @@ public class Main {
                 commandArgs -> parseNewsler(Integer.parseInt(commandArgs.get(0)), Integer.parseInt(commandArgs.get(1)),
                         Integer.parseInt(commandArgs.get(2)), Integer.parseInt(commandArgs.get(3)), commandArgs.get(4))));
 
+        commander.addCommand(new Command("pg",
+                "parse theguardian.com",
+                new ArrayList<>(Arrays.asList("<No. start page>", "<No. end page>",
+                        "<No. start news>", "<No. end news>", "<Images save path>")),
+                commandArgs -> parseGuardian(Integer.parseInt(commandArgs.get(0)), Integer.parseInt(commandArgs.get(1)),
+                        Integer.parseInt(commandArgs.get(2)), Integer.parseInt(commandArgs.get(3)), commandArgs.get(4))));
+
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print("Введите команду: ");
             try {
                 commander.executeCommand(scanner.nextLine());
             } catch (Exception exc) {
-                System.out.println(exc.getMessage());
+                exc.printStackTrace();//System.out.println(exc.getMessage());
             }
         }
     }

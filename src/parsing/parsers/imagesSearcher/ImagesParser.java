@@ -1,5 +1,6 @@
 package parsing.parsers.imagesSearcher;
 
+import Files.Extension;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,14 +21,26 @@ public class ImagesParser implements Parser<ArrayList<Image>> {
         JSONArray preview = (JSONArray)obj.get("preview");
 
         ArrayList<Image> images = new ArrayList<>();
+        ArrayList<Image> imagesNoExt = new ArrayList<>();
         int size = Math.max(dups.size(), preview.size());
         for (int i = 0; i < size; ++i) {
-            if (i < dups.size())
-                images.add(getImage((JSONObject)dups.get(i)));
-            if (i < preview.size())
-                images.add(getImage((JSONObject)preview.get(i)));
+            if (i < dups.size()) {
+                Image image = getImage((JSONObject) dups.get(i));
+                if (Extension.getImageExtension(image.getUrl()) == null)
+                    imagesNoExt.add(image);
+                else
+                    images.add(image);
+            }
+            if (i < preview.size()) {
+                Image image = getImage((JSONObject) preview.get(i));
+                if (Extension.getImageExtension(image.getUrl()) == null)
+                    imagesNoExt.add(image);
+                else
+                    images.add(image);
+            }
         }
 
+        images.addAll(imagesNoExt);
         return images;
     }
 

@@ -17,6 +17,10 @@ public class News {
         setImage(image);
     }
 
+    public News(String text) {
+        setText(text);
+    }
+
 
     public String getName() {
         return name;

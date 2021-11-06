@@ -59,6 +59,8 @@ public class Date {
             put("ИЮЛЬ", 6); put("АВГУСТ", 7); put("СЕНТЯБРЬ", 8); put("ОКТЯБРЬ", 9); put("НОЯБРЬ", 10); put("ДЕКАБРЬ", 11);
             put("ЯНВАРЯ", 0); put("ФЕВРАЛЯ", 1); put("МАРТА", 2); put("АПРЕЛЯ", 3); put("МАЯ", 4); put("ИЮНЯ", 5);
             put("ИЮЛЯ", 6); put("АВГУСТА", 7); put("СЕНТЯБРЯ", 8); put("ОКТЯБРЯ", 9); put("НОЯБРЯ", 10); put("ДЕКАБРЯ", 11);
+            put("JAN", 0); put("FEB", 1); put("MAR", 2); put("APR", 3); put("MAY", 4); put("JUN", 5);
+            put("JUL", 6); put("AUG", 7); put("SEP", 8); put("OCT", 9); put("NOV", 10); put("DEC", 11);
         }};
         this.month = monthToNum.get(month.toUpperCase());
     }
@@ -103,6 +105,20 @@ public class Date {
         if (hours < 0 || hours > 23)
             throw new IllegalArgumentException();
         this.hours = hours;
+    }
+
+    public void incrementHours() {
+        if (hours < 23)
+            ++hours;
+        else {
+            hours = 0;
+            if (getDaysInMonth(month, year) == date) {
+                date = 1;
+                month = (month + 13) % 12;
+                if (month == 0)
+                    ++year;
+            }
+        }
     }
 
     public int getMinutes() {

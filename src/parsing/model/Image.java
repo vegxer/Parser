@@ -1,12 +1,11 @@
 package parsing.model;
 
 import Files.Extension;
-import Threads.LoadingThread;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 
 public class Image {
@@ -22,13 +21,15 @@ public class Image {
     public boolean save(String path) {
         try {
             BufferedImage input = ImageIO.read(new URL(url));
-            String extension = Extension.getExtension(url);
-            File output = new File(path + "." + extension);
+            String extension = Extension.getImageExtension(url);
+            if (extension == null)
+                extension = "jpg";
+            FileImageOutputStream output = new FileImageOutputStream(new File(path + "." + extension));
             try {
                 ImageIO.write(input, extension, output);
                 return true;
             } catch (Exception exc) {
-                output = new File(path + ".jpg");
+                output = new FileImageOutputStream(new File(path + ".jpg"));
                 ImageIO.write(input, "jpg", output);
                 return true;
             }
