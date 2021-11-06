@@ -21,17 +21,19 @@ public class Image {
     public boolean save(String path) {
         try {
             BufferedImage input = ImageIO.read(new URL(url));
+            if (input == null)
+                return false;
             String extension = Extension.getImageExtension(url);
             if (extension == null)
                 extension = "jpg";
             FileImageOutputStream output = new FileImageOutputStream(new File(path + "." + extension));
             try {
-                ImageIO.write(input, extension, output);
+                if (!ImageIO.write(input, extension, output))
+                    throw new Exception();
                 return true;
             } catch (Exception exc) {
                 output = new FileImageOutputStream(new File(path + ".jpg"));
-                ImageIO.write(input, "jpg", output);
-                return true;
+                return ImageIO.write(input, "jpg", output);
             }
         } catch (Exception exc) {
             return false;

@@ -4,6 +4,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 public abstract class NestingLevel {
     protected boolean isFinal = false;
@@ -21,7 +22,7 @@ public abstract class NestingLevel {
     }
 
     public abstract NestingLevel getNextLvl(Element currElement);
-    public abstract Element getElementById(int id) throws IOException;
+    public abstract Element getElementById(int id) throws IOException, ParseException;
 
 
     public int getStartPoint() {

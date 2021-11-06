@@ -39,7 +39,7 @@ public class Main {
     }
 
     public static void parseShopsReviews(int start, int end, int startShop, int endShop, int reviewsPagesStart,
-                                         int reviewsPagesEnd, int reviewStart, int reviewEnd) throws IOException, ParseException {
+                                         int reviewsPagesEnd, int reviewStart, int reviewEnd) throws IOException, ParseException, java.text.ParseException {
         ShopReviewParserWorker parser = new ShopReviewParserWorker(new ShopReviewParser(),
                 new ShopReviewSettings(start, end, startShop, endShop, reviewsPagesStart, reviewsPagesEnd, reviewStart, reviewEnd));
         parser.onCompleted.addOnActionHandler(new ShopReviewParserWorker.Completed());
@@ -48,7 +48,7 @@ public class Main {
     }
 
     public static void parseImages(String searchQuery, int start, int end, int startImage, int endImage,
-                                   String savePath) throws IOException, ParseException {
+                                   String savePath) throws IOException, ParseException, java.text.ParseException {
         ImagesParserWorker parser = new ImagesParserWorker(new ImagesParser(),
                 new ImagesParserSettings(start, end, startImage, endImage, searchQuery), savePath);
         parser.onCompleted.addOnActionHandler(new ImagesParserWorker.Completed());
@@ -57,7 +57,7 @@ public class Main {
     }
 
     public static void parseLeroy(String query, int start, int end, int startShop, int endShop, int reviewsPagesStart,
-                                         int reviewsPagesEnd, int reviewStart, int reviewEnd) throws IOException, ParseException {
+                                         int reviewsPagesEnd, int reviewStart, int reviewEnd) throws IOException, ParseException, java.text.ParseException {
         LeroyMerlinParserWorker parser = new LeroyMerlinParserWorker(new LeroyMerlinParser(),
                 new LeroyMerlinSettings(start, end, startShop, endShop, reviewsPagesStart, reviewsPagesEnd,
                         reviewStart, reviewEnd, query));
@@ -66,7 +66,7 @@ public class Main {
         parse(parser);
     }
 
-    public static void parseNewsler(int start, int end, int startNews, int endNews, String savePath) throws IOException, ParseException {
+    public static void parseNewsler(int start, int end, int startNews, int endNews, String savePath) throws IOException, ParseException, java.text.ParseException {
         NewslerParserWorker parser = new NewslerParserWorker(new NewslerParser(),
                 new NewslerSettings(start, end, startNews, endNews), savePath);
         parser.onCompleted.addOnActionHandler(new NewslerParserWorker.Completed());
@@ -74,7 +74,7 @@ public class Main {
         parse(parser);
     }
 
-    public static void parseGuardian(int start, int end, int startNews, int endNews, String savePath) throws IOException, ParseException {
+    public static void parseGuardian(int start, int end, int startNews, int endNews, String savePath) throws IOException, ParseException, java.text.ParseException {
         GuardianParserWorker parser = new GuardianParserWorker(new GuardianParser(),
                 new GuardianSettings(start, end, startNews, endNews), savePath);
         parser.onCompleted.addOnActionHandler(new GuardianParserWorker.Completed());
@@ -82,7 +82,7 @@ public class Main {
         parse(parser);
     }
 
-    public static <T>void parse(ParserWorker<T> parser) throws IOException, ParseException {
+    public static <T>void parse(ParserWorker<T> parser) throws IOException, ParseException, java.text.ParseException {
         parser.start();
         parser.abort();
     }
@@ -144,7 +144,7 @@ public class Main {
             try {
                 commander.executeCommand(scanner.nextLine());
             } catch (Exception exc) {
-                exc.printStackTrace();//System.out.println(exc.getMessage());
+                System.out.println("Ошибка: " + exc.getMessage());
             }
         }
     }

@@ -13,6 +13,7 @@ import parsing.model.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ImagesParserWorker extends ParserWorker<ArrayList<Image>> {
@@ -60,9 +61,11 @@ public class ImagesParserWorker extends ParserWorker<ArrayList<Image>> {
         }
 
         @Override
-        public Element getElementById(int id) {
+        public Element getElementById(int id) throws ParseException {
             if (id > 30)
                 return null;
+            if (getElements().size() == 0)
+                throw new ParseException("требуется ввод капчи", 1);
             return getElement(0).getElementsByClass(String.format("serp-item serp-item_type_search serp-item" +
                             "_group_search serp-item_pos_%d serp-item_scale_yes justifier__item i-bem",
                     Integer.parseInt(ParserSettings.PREFIX) * 30 + id - 1)).get(0);

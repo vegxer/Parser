@@ -24,7 +24,7 @@ public abstract class ParserWorker<T> {
     }
 
 
-    public void start() throws IOException, ParseException {
+    public void start() throws IOException, ParseException, java.text.ParseException {
         isActive = true;
         work();
     }
@@ -35,13 +35,13 @@ public abstract class ParserWorker<T> {
 
     protected abstract NestingLevel getFirstLvl();
 
-    private void work() throws IOException, ParseException {
+    private void work() throws IOException, ParseException, java.text.ParseException {
         work(getFirstLvl());
         onCompleted.onAction("Загрузка закончена");
         isActive = false;
     }
 
-    private void work(NestingLevel nestLvl) throws IOException, ParseException {
+    private void work(NestingLevel nestLvl) throws IOException, ParseException, java.text.ParseException {
         if (nestLvl.isFinal())
             parseLastLvl(nestLvl);
         else {
@@ -58,7 +58,7 @@ public abstract class ParserWorker<T> {
         }
     }
 
-    private void parseLastLvl(NestingLevel lastLvl) throws IOException, ParseException {
+    private void parseLastLvl(NestingLevel lastLvl) throws IOException, ParseException, java.text.ParseException {
         for (int i = lastLvl.getStartPoint(); i <= lastLvl.getEndPoint(); ++i) {
             Element currElement = lastLvl.getElementById(i);
             if (currElement == null)

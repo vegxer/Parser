@@ -23,7 +23,7 @@ public class Commander {
     }
 
 
-    public void executeCommand(String command) throws IOException, ParseException {
+    public void executeCommand(String command) throws IOException, ParseException, java.text.ParseException {
         ArrayList<String> arguments = splitArguments(command);
         if (arguments.size() == 0)
             throw new IllegalArgumentException("Неверно введена команда");

@@ -27,7 +27,7 @@ public class Command implements Executable {
 
 
     @Override
-    public void execute(ArrayList<String> commandArgs) throws IOException, ParseException {
+    public void execute(ArrayList<String> commandArgs) throws IOException, ParseException, java.text.ParseException {
         this.command.execute(commandArgs);
     }
 
