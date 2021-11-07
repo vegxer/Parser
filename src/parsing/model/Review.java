@@ -45,7 +45,7 @@ public class Review {
     public void setReview(String review) {
         if (review == null)
             throw new NullPointerException();
-        this.review = review;
+        this.review = review.replaceAll("[“”]", "\"");
     }
 
     public String getPros() {
@@ -55,7 +55,7 @@ public class Review {
     public void setPros(String pros) {
         if (pros == null)
             throw new NullPointerException();
-        this.pros = pros;
+        this.pros = pros.replaceAll("[“”]", "\"");
     }
 
     public String getCons() {
@@ -65,7 +65,7 @@ public class Review {
     public void setCons(String cons) {
         if (cons == null)
             throw new NullPointerException();
-        this.cons = cons;
+        this.cons = cons.replaceAll("[“”]", "\"");
     }
 
     public String getShopName() {
@@ -75,7 +75,7 @@ public class Review {
     public void setShopName(String shopName) {
         if (shopName == null)
             throw new NullPointerException();
-        this.shopName = shopName;
+        this.shopName = shopName.replaceAll("[“”]", "\"");
     }
 
     public Date getDate() {

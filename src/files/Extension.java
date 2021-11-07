@@ -8,14 +8,18 @@ public final class Extension {
 
     public static String getImageExtension(String filePath)
     {
-        ArrayList<String> formats = new ArrayList<>(List.of(".jpg", ".jpeg", ".png", ".webp", ".tiff", ".bmp", ".gif",
-                ".ico", ".ecw", ".ilbm", ".tif", ".pcx"));
+        ArrayList<String> formats = getImageExtensions();
 
         for (String format : formats) {
-            if (filePath.endsWith(format))
-                return format.substring(1);
+            if (filePath.endsWith("." + format))
+                return format;
         }
 
         return null;
+    }
+
+    public static ArrayList<String> getImageExtensions() {
+        return new ArrayList<>(List.of("jpg", "png", "jpeg", "bmp", "webp", "gif", "tiff",
+                "ico", "ecw", "ilbm", "tif", "pcx"));
     }
 }

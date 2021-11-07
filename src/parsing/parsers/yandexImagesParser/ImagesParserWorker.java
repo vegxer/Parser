@@ -66,9 +66,12 @@ public class ImagesParserWorker extends ParserWorker<ArrayList<Image>> {
                 return null;
             if (getElements().size() == 0)
                 throw new ParseException("требуется ввод капчи", 1);
-            return getElement(0).getElementsByClass(String.format("serp-item serp-item_type_search serp-item" +
+            Elements image = getElement(0).getElementsByClass(String.format("serp-item serp-item_type_search serp-item" +
                             "_group_search serp-item_pos_%d serp-item_scale_yes justifier__item i-bem",
-                    Integer.parseInt(ParserSettings.PREFIX) * 30 + id - 1)).get(0);
+                    Integer.parseInt(ParserSettings.PREFIX) * 30 + id - 1));
+            if (image.size() == 0)
+                return null;
+            return image.get(0);
         }
     }
 
@@ -111,7 +114,8 @@ public class ImagesParserWorker extends ParserWorker<ArrayList<Image>> {
                     name = data.get(i).getUrl().substring(lastSlash, lastDot);
                 if (name.length() > 100)
                     name = name.substring(100);
-            } while (!(isDownloaded = data.get(i).save(savePath + name)) && ++i < data.size());
+                isDownloaded = data.get(i).save(savePath + name.replaceAll("[?<>|\"*:\\\\/\\n]", "!"));
+            } while (!isDownloaded && ++i < data.size());
 
             System.out.print("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
             loading.stop();

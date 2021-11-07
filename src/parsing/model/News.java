@@ -29,7 +29,7 @@ public class News {
     public void setName(String name) {
         if (name == null)
             throw new NullPointerException();
-        this.name = name;
+        this.name = name.replaceAll("[“”]", "\"");
     }
 
     public String getText() {
@@ -39,7 +39,7 @@ public class News {
     public void setText(String text) {
         if (text == null)
             throw new NullPointerException();
-        this.text = text;
+        this.text = text.replaceAll("[“”]", "\"");
     }
 
     public Date getDate() {
