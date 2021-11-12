@@ -1,13 +1,13 @@
-package parsing.parsers.yandexImagesParser;
+package parsing.websitesParsers.yandexImagesParser;
 
-import files.Extension;
+import urlImage.ImageExtension;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.jsoup.nodes.Element;
 import parsing.Parser;
-import parsing.model.Image;
+import urlImage.Image;
 
 import java.util.ArrayList;
 
@@ -26,14 +26,14 @@ public class ImagesParser implements Parser<ArrayList<Image>> {
         for (int i = 0; i < size; ++i) {
             if (i < dups.size()) {
                 Image image = getImage((JSONObject) dups.get(i));
-                if (Extension.getImageExtension(image.getUrl()) == null)
+                if (ImageExtension.getImageExtension(image.getUrl()) == null)
                     imagesNoExt.add(image);
                 else
                     images.add(image);
             }
             if (i < preview.size()) {
                 Image image = getImage((JSONObject) preview.get(i));
-                if (Extension.getImageExtension(image.getUrl()) == null)
+                if (ImageExtension.getImageExtension(image.getUrl()) == null)
                     imagesNoExt.add(image);
                 else
                     images.add(image);

@@ -1,4 +1,4 @@
-package parsing.parsers.yandexImagesParser;
+package parsing.websitesParsers.yandexImagesParser;
 
 import parsing.ParserSettings;
 

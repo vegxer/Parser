@@ -1,4 +1,4 @@
-package threads;
+package urlImage.threads;
 
 public class LoadingThread implements Runnable {
 

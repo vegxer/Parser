@@ -1,4 +1,4 @@
-package parsing.model;
+package textEditor;
 
 public final class Text {
     private Text() {}

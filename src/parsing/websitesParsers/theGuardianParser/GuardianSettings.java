@@ -1,15 +1,15 @@
-package parsing.parsers.newslerParser;
+package parsing.websitesParsers.theGuardianParser;
 
 import parsing.ParserSettings;
 
-public class NewslerSettings extends ParserSettings {
+public class GuardianSettings extends ParserSettings {
     private int startNews, endNews;
 
-    public NewslerSettings(int startPoint, int endPoint, int startNews, int endNews) {
+    public GuardianSettings(int startPoint, int endPoint, int startNews, int endNews) {
         super(startPoint, endPoint);
         setStartNews(startNews);
         setEndNews(endNews);
-        BASE_URL = "https://";
+        BASE_URL = "https://www.theguardian.com";
         PREFIX = "{CurrentId}";
     }
 

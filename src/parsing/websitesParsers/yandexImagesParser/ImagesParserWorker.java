@@ -1,6 +1,6 @@
-package parsing.parsers.yandexImagesParser;
+package parsing.websitesParsers.yandexImagesParser;
 
-import threads.LoadingThread;
+import urlImage.threads.LoadingThread;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import parsing.NestingLevel;
@@ -8,7 +8,7 @@ import parsing.Parser;
 import parsing.ParserSettings;
 import parsing.ParserWorker;
 import parsing.handlers.ParserHandler;
-import parsing.model.Image;
+import urlImage.Image;
 
 import java.io.File;
 import java.io.FileNotFoundException;

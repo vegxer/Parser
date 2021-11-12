@@ -1,4 +1,4 @@
-package parsing.parsers.leroyMerlinParser;
+package parsing.websitesParsers.leroyMerlinParser;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;

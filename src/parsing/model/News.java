@@ -1,6 +1,7 @@
 package parsing.model;
 
 import time.Date;
+import urlImage.Image;
 
 public class News {
     private String name, text;

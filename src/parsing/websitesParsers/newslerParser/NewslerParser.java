@@ -1,10 +1,10 @@
-package parsing.parsers.newslerParser;
+package parsing.websitesParsers.newslerParser;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import parsing.Parser;
 import parsing.ParserSettings;
-import parsing.model.Image;
+import urlImage.Image;
 import parsing.model.News;
 import time.Date;
 

@@ -1,9 +1,8 @@
-package parsing.model;
-
-import files.Extension;
+package urlImage;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -19,17 +18,19 @@ public class Image {
         this.url = url;
     }
 
-    public boolean save(String path) {
+
+    public String download(String folderPath) {
         try {
             BufferedImage input = ImageIO.read(new URL(url));
             if (input == null)
-                return false;
-            String extension = Extension.getImageExtension(url);
+                return null;
+            String extension = ImageExtension.getExtension(url);
             if (extension == null) {
-                ArrayList<String> extensions = Extension.getImageExtensions();
+                ArrayList<String> extensions = ImageExtension.getAllExtensions();
                 boolean isDownloaded = false;
+                File savedFile = null;
                 for (int i = 0; i < extensions.size() && !isDownloaded; ++i) {
-                    File savedFile = new File(path + "." + extensions.get(i));
+                    savedFile = new File(folderPath + "." + extensions.get(i));
                     FileImageOutputStream output = new FileImageOutputStream(savedFile);
                     try {
                         isDownloaded = ImageIO.write(input, extensions.get(i), output);
@@ -40,20 +41,31 @@ public class Image {
                     if (!isDownloaded)
                         savedFile.delete();
                 }
-                return isDownloaded;
+                return isDownloaded ? savedFile.getAbsolutePath() : null;
             }
             else {
-                File savedFile = new File(path + "." + extension);
+                File savedFile = new File(folderPath + "." + extension);
                 FileImageOutputStream output = new FileImageOutputStream(savedFile);
                 boolean isDownloaded = ImageIO.write(input, extension, output);
                 if (!isDownloaded)
                     savedFile.delete();
                 output.close();
-                return isDownloaded;
+                return isDownloaded ? savedFile.getAbsolutePath() : null;
             }
         } catch (Exception exc) {
-            return false;
+            return null;
         }
+    }
+
+    public static BufferedImage resize(BufferedImage image, int targetWidth, int targetHeight) {
+        if (targetHeight <= 0 || targetWidth <= 0)
+            throw new IllegalArgumentException("Неверный ввод размеров изображения");
+
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics2D = resizedImage.createGraphics();
+        graphics2D.drawImage(image, 0, 0, targetWidth, targetHeight, null);
+        graphics2D.dispose();
+        return resizedImage;
     }
 
 

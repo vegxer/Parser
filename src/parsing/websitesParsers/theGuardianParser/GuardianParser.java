@@ -1,15 +1,12 @@
-package parsing.parsers.theGuardianParser;
+package parsing.websitesParsers.theGuardianParser;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import parsing.Parser;
-import parsing.ParserSettings;
-import parsing.model.Image;
+import urlImage.Image;
 import parsing.model.News;
 import time.Date;
-
-import java.util.Calendar;
 
 public class GuardianParser implements Parser<News> {
     @Override

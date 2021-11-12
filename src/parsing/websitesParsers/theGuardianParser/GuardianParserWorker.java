@@ -1,4 +1,4 @@
-package parsing.parsers.newslerParser;
+package parsing.websitesParsers.theGuardianParser;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -8,16 +8,16 @@ import parsing.ParserSettings;
 import parsing.ParserWorker;
 import parsing.handlers.ParserHandler;
 import parsing.model.News;
-import parsing.model.Text;
+import textEditor.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class NewslerParserWorker extends ParserWorker<News> {
+public class GuardianParserWorker extends ParserWorker<News> {
     private String savePath;
 
-    public NewslerParserWorker(Parser<News> parser, ParserSettings parserSettings, String savePath)
+    public GuardianParserWorker(Parser<News> parser, ParserSettings parserSettings, String savePath)
             throws FileNotFoundException {
         super(parser, parserSettings);
         setSavePath(savePath);
@@ -35,14 +35,14 @@ public class NewslerParserWorker extends ParserWorker<News> {
 
         @Override
         public NestingLevel getNextLvl(Element currElement) {
-            NewslerSettings settings = (NewslerSettings)parserSettings;
+            GuardianSettings settings = (GuardianSettings)parserSettings;
             return new NewsLevel(settings.getStartNews(), settings.getEndNews(),
-                    currElement.getElementsByClass("zag"));
+                    currElement.getElementsByClass("u-faux-block-link__overlay js-headline-text"));
         }
 
         @Override
         public Element getElementById(int id) throws IOException {
-            return loader.getSourceByPageId("www.newsler.ru/news?p=" + id);
+            return loader.getSourceByPageId("/world?page=" + id);
         }
     }
 
@@ -59,10 +59,19 @@ public class NewslerParserWorker extends ParserWorker<News> {
 
         @Override
         public Element getElementById(int id) throws IOException {
-            if (id > 22)
+            String link = getElement(id - 1).attributes().get("href");
+            if (id > 20)
                 return null;
-            return loader.getSourceByPageId(getElement(id - 1).getElementsByTag("a")
-                    .attr("href").substring(8));
+            if (link.contains("/video/"))
+                return new Element("error").appendText("!!!Встретилась необрабатываемая \"видео-новость\" по ссылке "
+                        + link + "!!!");
+            if (link.contains("/gallery/"))
+                return new Element("error").appendText("!!!Встретилась необрабатываемая \"фото-новость\" по ссылке "
+                        + link + "!!!");
+            if (link.contains("/live/"))
+                return new Element("error").appendText("!!!Встретилась необрабатываемая \"новость в прямом эфире\"" +
+                        " по ссылке " + link + "!!!");
+            return loader.getSourceByPageId(link.substring(27)).appendText(getElement(id - 1).text());
         }
     }
 
@@ -71,15 +80,19 @@ public class NewslerParserWorker extends ParserWorker<News> {
         @Override
         public void onAction(ParserWorker<News> sender, News data) {
             System.out.println("\n");
+            if (data.getText().contains("!!!Встретилась необрабатываемая")) {
+                System.out.println(data.getText());
+                return;
+            }
             System.out.println("Заголовок новости:\n" + Text.splitByLines(data.getName(), 100));
             System.out.println("Дата: " + data.getDate().toString());
-            System.out.println("Текст:\n" + Text.splitByLines(data.getText(), 100));
+            System.out.print("Текст:\n" + Text.splitByLines(data.getText(), 100));
             if (!data.getImage().getUrl().isEmpty()) {
                 String name = data.getName().replaceAll("[?<>|\"*:\\\\/\\n]", " ");
                 if (name.length() > 100)
                     name = name.substring(0, 100);
                 System.out.println("Ссылка на картинку: " + data.getImage().getUrl());
-                if (data.getImage().save(((NewslerParserWorker)sender).getSavePath() + "/" + name))
+                if (data.getImage().save(((GuardianParserWorker)sender).getSavePath() + "/" + name))
                     System.out.println("Изображение \"" + name + "\" сохранено");
                 else
                     System.out.println("Ошибка сохранения изображения " + data.getImage().getUrl());
