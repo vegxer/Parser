@@ -19,18 +19,17 @@ public class Image {
     }
 
 
-    public String download(String folderPath) {
+    public boolean download(String folderPath) {
         try {
             BufferedImage input = ImageIO.read(new URL(url));
             if (input == null)
-                return null;
+                return false;
             String extension = ImageExtension.getExtension(url);
             if (extension == null) {
                 ArrayList<String> extensions = ImageExtension.getAllExtensions();
                 boolean isDownloaded = false;
-                File savedFile = null;
                 for (int i = 0; i < extensions.size() && !isDownloaded; ++i) {
-                    savedFile = new File(folderPath + "." + extensions.get(i));
+                    File savedFile = new File(folderPath + "." + extensions.get(i));
                     FileImageOutputStream output = new FileImageOutputStream(savedFile);
                     try {
                         isDownloaded = ImageIO.write(input, extensions.get(i), output);
@@ -41,7 +40,7 @@ public class Image {
                     if (!isDownloaded)
                         savedFile.delete();
                 }
-                return isDownloaded ? savedFile.getAbsolutePath() : null;
+                return isDownloaded;
             }
             else {
                 File savedFile = new File(folderPath + "." + extension);
@@ -50,10 +49,10 @@ public class Image {
                 if (!isDownloaded)
                     savedFile.delete();
                 output.close();
-                return isDownloaded ? savedFile.getAbsolutePath() : null;
+                return isDownloaded;
             }
         } catch (Exception exc) {
-            return null;
+            return false;
         }
     }
 

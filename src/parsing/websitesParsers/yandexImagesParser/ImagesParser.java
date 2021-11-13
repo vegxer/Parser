@@ -26,14 +26,14 @@ public class ImagesParser implements Parser<ArrayList<Image>> {
         for (int i = 0; i < size; ++i) {
             if (i < dups.size()) {
                 Image image = getImage((JSONObject) dups.get(i));
-                if (ImageExtension.getImageExtension(image.getUrl()) == null)
+                if (ImageExtension.getExtension(image.getUrl()) == null)
                     imagesNoExt.add(image);
                 else
                     images.add(image);
             }
             if (i < preview.size()) {
                 Image image = getImage((JSONObject) preview.get(i));
-                if (ImageExtension.getImageExtension(image.getUrl()) == null)
+                if (ImageExtension.getExtension(image.getUrl()) == null)
                     imagesNoExt.add(image);
                 else
                     images.add(image);

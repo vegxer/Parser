@@ -114,7 +114,7 @@ public class ImagesParserWorker extends ParserWorker<ArrayList<Image>> {
                     name = data.get(i).getUrl().substring(lastSlash, lastDot);
                 if (name.length() > 100)
                     name = name.substring(100);
-                isDownloaded = data.get(i).save(savePath + name.replaceAll("[?<>|\"*:\\\\/\\n]", "!"));
+                isDownloaded = data.get(i).download(savePath + name.replaceAll("[?<>|\"*:\\\\/\\n]", "!"));
             } while (!isDownloaded && ++i < data.size());
 
             System.out.print("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");

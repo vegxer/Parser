@@ -79,7 +79,7 @@ public class NewslerParserWorker extends ParserWorker<News> {
                 if (name.length() > 100)
                     name = name.substring(0, 100);
                 System.out.println("Ссылка на картинку: " + data.getImage().getUrl());
-                if (data.getImage().save(((NewslerParserWorker)sender).getSavePath() + "/" + name))
+                if (data.getImage().download(((NewslerParserWorker)sender).getSavePath() + "/" + name))
                     System.out.println("Изображение \"" + name + "\" сохранено");
                 else
                     System.out.println("Ошибка сохранения изображения " + data.getImage().getUrl());
