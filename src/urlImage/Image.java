@@ -56,15 +56,21 @@ public class Image {
         }
     }
 
-    public static BufferedImage resize(BufferedImage image, int targetWidth, int targetHeight) {
-        if (targetHeight <= 0 || targetWidth <= 0)
-            throw new IllegalArgumentException("Неверный ввод размеров изображения");
+    public String getName() {
+        String name;
 
-        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics2D = resizedImage.createGraphics();
-        graphics2D.drawImage(image, 0, 0, targetWidth, targetHeight, null);
-        graphics2D.dispose();
-        return resizedImage;
+        int lastSlash = url.lastIndexOf('/') + 1;
+        int lastDot = url.lastIndexOf('.');
+        if (lastDot == url.length() - 1)
+            name = "unnamed";
+        else if (lastDot <= lastSlash)
+            name = url.substring(lastSlash);
+        else
+            name = url.substring(lastSlash, lastDot);
+        if (name.length() > 100)
+            name = name.substring(100);
+
+        return name.replaceAll("[?<>|\"*:\\\\/\\n]", "!");
     }
 
 

@@ -8,6 +8,7 @@ import parsing.ParserSettings;
 import parsing.ParserWorker;
 import parsing.handlers.ParserHandler;
 import parsing.model.News;
+import parsing.websitesParsers.theGuardianParser.GuardianParserWorker;
 import textEditor.Text;
 
 import java.io.File;
@@ -70,6 +71,9 @@ public class NewslerParserWorker extends ParserWorker<News> {
     public static class NewData implements ParserHandler<ParserWorker<News>, News> {
         @Override
         public void onAction(ParserWorker<News> sender, News data) {
+            if (!(sender instanceof NewslerParserWorker npw))
+                throw new IllegalArgumentException();
+
             System.out.println("\n");
             System.out.println("Заголовок новости:\n" + Text.splitByLines(data.getName(), 100));
             System.out.println("Дата: " + data.getDate().toString());
@@ -78,11 +82,14 @@ public class NewslerParserWorker extends ParserWorker<News> {
                 String name = data.getName().replaceAll("[?<>|\"*:\\\\/\\n]", " ");
                 if (name.length() > 100)
                     name = name.substring(0, 100);
+                String savePath = npw.getSavePath();
+                if (savePath.charAt(savePath.length() - 1) != '/')
+                    savePath += "/";
                 System.out.println("Ссылка на картинку: " + data.getImage().getUrl());
-                if (data.getImage().download(((NewslerParserWorker)sender).getSavePath() + "/" + name))
-                    System.out.println("Изображение \"" + name + "\" сохранено");
+                if (data.getImage().download(savePath + name))
+                    System.out.println("Изображение сохранено под названием \"" + name + "\"");
                 else
-                    System.out.println("Ошибка сохранения изображения " + data.getImage().getUrl());
+                    System.out.println("Ошибка сохранения изображения");
             }
         }
     }

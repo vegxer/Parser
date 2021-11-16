@@ -66,8 +66,8 @@ public class ImagesParserWorker extends ParserWorker<ArrayList<Image>> {
                 return null;
             if (getElements().size() == 0)
                 throw new ParseException("требуется ввод капчи", 1);
-            Elements image = getElement(0).getElementsByClass(String.format("serp-item serp-item_type_search serp-item" +
-                            "_group_search serp-item_pos_%d serp-item_scale_yes justifier__item i-bem",
+            Elements image = getElement(0).select(String.format("[class~=serp-item serp-item_type_search serp-item" +
+                            "_group_search serp-item_pos_%d serp-item_scale_yes.+justifier__item i-bem]",
                     Integer.parseInt(ParserSettings.PREFIX) * 30 + id - 1));
             if (image.size() == 0)
                 return null;
@@ -92,36 +92,29 @@ public class ImagesParserWorker extends ParserWorker<ArrayList<Image>> {
     public static class NewData implements ParserHandler<ParserWorker<ArrayList<Image>>, ArrayList<Image>> {
         @Override
         public void onAction(ParserWorker<ArrayList<Image>> sender, ArrayList<Image> data) {
-            if (!(sender instanceof ImagesParserWorker))
+            if (!(sender instanceof ImagesParserWorker ipw) || data.size() == 0)
                 throw new IllegalArgumentException();
+
+            System.out.println();
             Thread loading = new Thread(new LoadingThread());
             loading.start();
-            String savePath = ((ImagesParserWorker) sender).getSavePath();
 
+            String savePath = ipw.getSavePath();
             if (savePath.charAt(savePath.length() - 1) != '/')
                 savePath += "/";
-            String name;
-            int i = 0;
-            boolean isDownloaded;
-            do {
-                int lastSlash = data.get(i).getUrl().lastIndexOf('/') + 1;
-                int lastDot = data.get(i).getUrl().lastIndexOf('.');
-                if (lastDot == data.get(i).getUrl().length() - 1)
-                    name = "unnamed";
-                else if (lastDot <= lastSlash)
-                    name = data.get(i).getUrl().substring(lastSlash);
-                else
-                    name = data.get(i).getUrl().substring(lastSlash, lastDot);
-                if (name.length() > 100)
-                    name = name.substring(100);
-                isDownloaded = data.get(i).download(savePath + name.replaceAll("[?<>|\"*:\\\\/\\n]", "!"));
-            } while (!isDownloaded && ++i < data.size());
+            boolean isDownloaded = false;
+            String name = "";
+            int i;
+            for (i = 0; !isDownloaded && i < data.size(); ++i) {
+                name = data.get(i).getName();
+                isDownloaded = data.get(i).download(savePath + name);
+            }
 
-            System.out.print("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
             loading.stop();
+            System.out.print("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
 
             if (isDownloaded)
-                System.out.println("Изображение " + data.get(i).getUrl() + " сохранено");
+                System.out.println("Изображение " + data.get(i - 1).getUrl() + " сохранено\nпод именем \"" + name + "\"");
             else
                 System.out.println("Ошибка сохранения изображения");
         }
