@@ -11,13 +11,13 @@ public abstract class ParserWorker<T> {
     protected final ParserSettings parserSettings;
     protected final HtmlLoader loader;
     private boolean isActive;
-    public final HandlerController<ParserWorker<T>, T> onNewData;
-    public final HandlerController<ParserWorker<T>, String> onCompleted;
+    public final HandlerController<T> onNewData;
+    public final HandlerController<String> onCompleted;
 
 
     public ParserWorker(Parser<T> parser, ParserSettings parserSettings) {
-        onNewData = new HandlerController<>(this);
-        onCompleted = new HandlerController<>(this);
+        onNewData = new HandlerController<>();
+        onCompleted = new HandlerController<>();
         this.parser = parser;
         loader = new HtmlLoader(ParserSettings.BASE_URL + ParserSettings.PREFIX);
         this.parserSettings = parserSettings;
@@ -68,4 +68,10 @@ public abstract class ParserWorker<T> {
         }
     }
 
+
+    public abstract void onNewData(T data) throws IOException;
+
+    public void onCompleted(String data) throws IOException {
+        System.out.println(data);
+    }
 }

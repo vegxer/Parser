@@ -21,7 +21,7 @@ public class LeroyMerlinParserWorker extends ParserWorker<Review> {
 
     protected NestingLevel getFirstLvl() {
         return new ProductPageLevel(parserSettings.getStartPoint(), parserSettings.getEndPoint(),
-                new Elements(Jsoup.parse("search/?q=" + ((LeroyMerlinSettings)parserSettings).getSearchQuery() + "&page=")));
+                new Elements(Jsoup.parse("search/?q=" + ((LeroyMerlinSettings) parserSettings).getSearchQuery() + "&page=")));
     }
 
     private class ProductPageLevel extends NestingLevel {
@@ -71,7 +71,7 @@ public class LeroyMerlinParserWorker extends ParserWorker<Review> {
 
         @Override
         public NestingLevel getNextLvl(Element currElement) {
-            LeroyMerlinSettings settings = (LeroyMerlinSettings)parserSettings;
+            LeroyMerlinSettings settings = (LeroyMerlinSettings) parserSettings;
             Elements reviews = currElement.getElementsByTag("uc-prp-review-card");
             reviews.add(0, Jsoup.parse(currElement.getElementsByAttributeValue("slot", "title").get(0).text()));
             return new ReviewLevel(settings.getReviewStart(), settings.getReviewEnd(), reviews);
@@ -104,26 +104,17 @@ public class LeroyMerlinParserWorker extends ParserWorker<Review> {
     }
 
 
-    public static class Completed implements ParserHandler<ParserWorker<Review>, String> {
-        @Override
-        public void onAction(ParserWorker<Review> sender, String data) {
-            System.out.println(data);
-        }
-    }
-
-    public static class NewData implements ParserHandler<ParserWorker<Review>, Review> {
-        @Override
-        public void onAction(ParserWorker<Review> sender, Review data) {
-            System.out.println("\n");
-            System.out.println("Название товара: " + data.getShopName());
-            System.out.println("Номер страницы отзывов: " +
-                    ParserSettings.PREFIX.substring(ParserSettings.PREFIX.lastIndexOf('=') + 1));
-            System.out.println("Дата: " + data.getDate().toString().substring(0, 10));
-            System.out.println("Автор: " + data.getReviewerName());
-            System.out.println("Оценка: " + data.getGrade() + "/5");
-            System.out.println(Text.splitByLines(data.getPros(), 100));
-            System.out.println(Text.splitByLines(data.getCons(), 100));
-            System.out.println("Отзыв: " + Text.splitByLines(data.getReview(), 100));
-        }
+    @Override
+    public void onNewData(Review data) {
+        System.out.println("\n");
+        System.out.println("Название товара: " + data.getShopName());
+        System.out.println("Номер страницы отзывов: " +
+                ParserSettings.PREFIX.substring(ParserSettings.PREFIX.lastIndexOf('=') + 1));
+        System.out.println("Дата: " + data.getDate().toString().substring(0, 10));
+        System.out.println("Автор: " + data.getReviewerName());
+        System.out.println("Оценка: " + data.getGrade() + "/5");
+        System.out.println(Text.splitByLines(data.getPros(), 100));
+        System.out.println(Text.splitByLines(data.getCons(), 100));
+        System.out.println("Отзыв: " + Text.splitByLines(data.getReview(), 100));
     }
 }

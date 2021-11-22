@@ -37,7 +37,7 @@ public class ImagesParserWorker extends ParserWorker<ArrayList<Image>> {
 
         @Override
         public NestingLevel getNextLvl(Element currElement) {
-            ImagesParserSettings settings = (ImagesParserSettings)parserSettings;
+            ImagesParserSettings settings = (ImagesParserSettings) parserSettings;
             return new ImageLevel(settings.getStartImage(), settings.getEndImage(),
                     currElement.getElementsByClass("page-layout__column page-layout__column_type_content"));
         }
@@ -89,41 +89,30 @@ public class ImagesParserWorker extends ParserWorker<ArrayList<Image>> {
     }
 
 
-    public static class NewData implements ParserHandler<ParserWorker<ArrayList<Image>>, ArrayList<Image>> {
-        @Override
-        public void onAction(ParserWorker<ArrayList<Image>> sender, ArrayList<Image> data) {
-            if (!(sender instanceof ImagesParserWorker ipw) || data.size() == 0)
-                throw new IllegalArgumentException();
+    @Override
+    public void onNewData(ArrayList<Image> data) {
+        System.out.println();
+        Thread loading = new Thread(new LoadingThread());
+        loading.start();
 
-            System.out.println();
-            Thread loading = new Thread(new LoadingThread());
-            loading.start();
-
-            String savePath = ipw.getSavePath();
-            if (savePath.charAt(savePath.length() - 1) != '/')
-                savePath += "/";
-            boolean isDownloaded = false;
-            String name = "";
-            int i;
-            for (i = 0; !isDownloaded && i < data.size(); ++i) {
-                name = data.get(i).getName();
-                isDownloaded = data.get(i).download(savePath + name);
-            }
-
-            loading.stop();
-            System.out.print("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
-
-            if (isDownloaded)
-                System.out.println("Изображение " + data.get(i - 1).getUrl() + " сохранено\nпод именем \"" + name + "\"");
-            else
-                System.out.println("Ошибка сохранения изображения");
+        String savePath = getSavePath();
+        if (savePath.charAt(savePath.length() - 1) != '/')
+            savePath += "/";
+        boolean isDownloaded = false;
+        String name = "";
+        int i;
+        for (i = 0; !isDownloaded && i < data.size(); ++i) {
+            name = data.get(i).getName();
+            isDownloaded = data.get(i).download(savePath + name);
         }
+
+        loading.stop();
+        System.out.print("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+
+        if (isDownloaded)
+            System.out.println("Изображение " + data.get(i - 1).getUrl() + " сохранено\nпод именем \"" + name + "\"");
+        else
+            System.out.println("Ошибка сохранения изображения");
     }
 
-    public static class Completed implements ParserHandler<ParserWorker<ArrayList<Image>>, String> {
-        @Override
-        public void onAction(ParserWorker<ArrayList<Image>> sender, String data) {
-            System.out.println(data);
-        }
-    }
 }

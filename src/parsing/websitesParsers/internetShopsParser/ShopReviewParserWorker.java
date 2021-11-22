@@ -101,26 +101,17 @@ public class ShopReviewParserWorker extends ParserWorker<Review> {
     }
 
 
-    public static class Completed implements ParserHandler<ParserWorker<Review>, String> {
-        @Override
-        public void onAction(ParserWorker<Review> sender, String data) {
-            System.out.println(data);
-        }
-    }
-
-    public static class NewData implements ParserHandler<ParserWorker<Review>, Review> {
-        @Override
-        public void onAction(ParserWorker<Review> sender, Review data) {
-            System.out.println("\n");
-            System.out.println("Магазин: " + data.getShopName());
-            System.out.println("Номер страницы отзывов: " +
-                    ParserSettings.PREFIX.substring(ParserSettings.PREFIX.lastIndexOf('=') + 1));
-            System.out.println("Дата: " + data.getDate().toString().substring(0, 10));
-            System.out.println("Автор: " + data.getReviewerName());
-            System.out.println("Оценка: " + data.getGrade() + "/5");
-            System.out.println("Плюсы: " + Text.splitByLines(data.getPros(), 100));
-            System.out.println("Минусы: " + Text.splitByLines(data.getCons(), 100));
-            System.out.println("Отзыв: " + Text.splitByLines(data.getReview(), 100));
-        }
+    @Override
+    public void onNewData(Review data) {
+        System.out.println("\n");
+        System.out.println("Магазин: " + data.getShopName());
+        System.out.println("Номер страницы отзывов: " +
+                ParserSettings.PREFIX.substring(ParserSettings.PREFIX.lastIndexOf('=') + 1));
+        System.out.println("Дата: " + data.getDate().toString().substring(0, 10));
+        System.out.println("Автор: " + data.getReviewerName());
+        System.out.println("Оценка: " + data.getGrade() + "/5");
+        System.out.println("Плюсы: " + Text.splitByLines(data.getPros(), 100));
+        System.out.println("Минусы: " + Text.splitByLines(data.getCons(), 100));
+        System.out.println("Отзыв: " + Text.splitByLines(data.getReview(), 100));
     }
 }

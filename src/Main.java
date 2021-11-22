@@ -41,8 +41,6 @@ public class Main {
                                          int reviewsPagesEnd, int reviewStart, int reviewEnd) throws IOException, ParseException, java.text.ParseException {
         ShopReviewParserWorker parser = new ShopReviewParserWorker(new ShopReviewParser(),
                 new ShopReviewSettings(start, end, startShop, endShop, reviewsPagesStart, reviewsPagesEnd, reviewStart, reviewEnd));
-        parser.onCompleted.addOnActionHandler(new ShopReviewParserWorker.Completed());
-        parser.onNewData.addOnActionHandler(new ShopReviewParserWorker.NewData());
         parse(parser);
     }
 
@@ -50,8 +48,6 @@ public class Main {
                                    String savePath) throws IOException, ParseException, java.text.ParseException {
         ImagesParserWorker parser = new ImagesParserWorker(new ImagesParser(),
                 new ImagesParserSettings(start, end, startImage, endImage, searchQuery), savePath);
-        parser.onCompleted.addOnActionHandler(new ImagesParserWorker.Completed());
-        parser.onNewData.addOnActionHandler(new ImagesParserWorker.NewData());
         parse(parser);
     }
 
@@ -60,28 +56,24 @@ public class Main {
         LeroyMerlinParserWorker parser = new LeroyMerlinParserWorker(new LeroyMerlinParser(),
                 new LeroyMerlinSettings(start, end, startShop, endShop, reviewsPagesStart, reviewsPagesEnd,
                         reviewStart, reviewEnd, query));
-        parser.onCompleted.addOnActionHandler(new LeroyMerlinParserWorker.Completed());
-        parser.onNewData.addOnActionHandler(new LeroyMerlinParserWorker.NewData());
         parse(parser);
     }
 
     public static void parseNewsler(int start, int end, int startNews, int endNews, String savePath) throws IOException, ParseException, java.text.ParseException {
         NewslerParserWorker parser = new NewslerParserWorker(new NewslerParser(),
                 new NewslerSettings(start, end, startNews, endNews), savePath);
-        parser.onCompleted.addOnActionHandler(new NewslerParserWorker.Completed());
-        parser.onNewData.addOnActionHandler(new NewslerParserWorker.NewData());
         parse(parser);
     }
 
     public static void parseGuardian(int start, int end, int startNews, int endNews, String savePath) throws IOException, ParseException, java.text.ParseException {
         GuardianParserWorker parser = new GuardianParserWorker(new GuardianParser(),
                 new GuardianSettings(start, end, startNews, endNews), savePath);
-        parser.onCompleted.addOnActionHandler(new GuardianParserWorker.Completed());
-        parser.onNewData.addOnActionHandler(new GuardianParserWorker.NewData());
         parse(parser);
     }
 
     public static <T>void parse(ParserWorker<T> parser) throws IOException, ParseException, java.text.ParseException {
+        parser.onCompleted.addOnActionHandler(parser::onCompleted);
+        parser.onNewData.addOnActionHandler(parser::onNewData);
         parser.start();
         parser.abort();
     }

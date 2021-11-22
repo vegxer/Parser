@@ -3,33 +3,31 @@ package parsing.handlers;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class HandlerController<S, D> {
-    private S sender;
-    private final ArrayList<ParserHandler<S, D>> onActionList;
+public class HandlerController<D> {
+    private final ArrayList<ParserHandler<D>> onActionList;
 
 
-    public HandlerController(S sender) {
-        this.sender = sender;
+    public HandlerController() {
         onActionList = new ArrayList<>();
     }
 
-    public HandlerController(ArrayList<ParserHandler<S, D>> handlers) {
+    public HandlerController(ArrayList<ParserHandler<D>> handlers) {
         onActionList = new ArrayList<>(handlers);
     }
 
 
     public void onAction(D data) throws IOException {
-        for (ParserHandler<S, D> handler : onActionList)
-            handler.onAction(sender, data);
+        for (ParserHandler<D> handler : onActionList)
+            handler.onAction(data);
     }
 
-    public void addOnActionHandler(ParserHandler<S, D> handler) {
+    public void addOnActionHandler(ParserHandler<D> handler) {
         if (handler == null)
             throw new NullPointerException();
         onActionList.add(handler);
     }
 
-    public void removeOnActionHandler(ParserHandler<S, D> handler) {
+    public void removeOnActionHandler(ParserHandler<D> handler) {
         if (handler == null)
             throw new NullPointerException();
         onActionList.remove(handler);
@@ -39,11 +37,4 @@ public class HandlerController<S, D> {
         onActionList.remove(index);
     }
 
-    public S getSender() {
-        return sender;
-    }
-
-    public void setSender(S sender) {
-        this.sender = sender;
-    }
 }

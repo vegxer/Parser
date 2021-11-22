@@ -36,7 +36,7 @@ public class NewslerParserWorker extends ParserWorker<News> {
 
         @Override
         public NestingLevel getNextLvl(Element currElement) {
-            NewslerSettings settings = (NewslerSettings)parserSettings;
+            NewslerSettings settings = (NewslerSettings) parserSettings;
             return new NewsLevel(settings.getStartNews(), settings.getEndNews(),
                     currElement.getElementsByClass("zag"));
         }
@@ -68,36 +68,24 @@ public class NewslerParserWorker extends ParserWorker<News> {
     }
 
 
-    public static class NewData implements ParserHandler<ParserWorker<News>, News> {
-        @Override
-        public void onAction(ParserWorker<News> sender, News data) {
-            if (!(sender instanceof NewslerParserWorker npw))
-                throw new IllegalArgumentException();
-
-            System.out.println("\n");
-            System.out.println("Заголовок новости:\n" + Text.splitByLines(data.getName(), 100));
-            System.out.println("Дата: " + data.getDate().toString());
-            System.out.println("Текст:\n" + Text.splitByLines(data.getText(), 100));
-            if (!data.getImage().getUrl().isEmpty()) {
-                String name = data.getName().replaceAll("[?<>|\"*:\\\\/\\n]", " ");
-                if (name.length() > 100)
-                    name = name.substring(0, 100);
-                String savePath = npw.getSavePath();
-                if (savePath.charAt(savePath.length() - 1) != '/')
-                    savePath += "/";
-                System.out.println("Ссылка на картинку: " + data.getImage().getUrl());
-                if (data.getImage().download(savePath + name))
-                    System.out.println("Изображение сохранено под названием \"" + name + "\"");
-                else
-                    System.out.println("Ошибка сохранения изображения");
-            }
-        }
-    }
-
-    public static class Completed implements ParserHandler<ParserWorker<News>, String> {
-        @Override
-        public void onAction(ParserWorker<News> sender, String data) {
-            System.out.println(data);
+    @Override
+    public void onNewData(News data) {
+        System.out.println("\n");
+        System.out.println("Заголовок новости:\n" + Text.splitByLines(data.getName(), 100));
+        System.out.println("Дата: " + data.getDate().toString());
+        System.out.println("Текст:\n" + Text.splitByLines(data.getText(), 100));
+        if (!data.getImage().getUrl().isEmpty()) {
+            String name = data.getName().replaceAll("[?<>|\"*:\\\\/\\n]", " ");
+            if (name.length() > 100)
+                name = name.substring(0, 100);
+            String savePath = getSavePath();
+            if (savePath.charAt(savePath.length() - 1) != '/')
+                savePath += "/";
+            System.out.println("Ссылка на картинку: " + data.getImage().getUrl());
+            if (data.getImage().download(savePath + name))
+                System.out.println("Изображение сохранено под названием \"" + name + "\"");
+            else
+                System.out.println("Ошибка сохранения изображения");
         }
     }
 
